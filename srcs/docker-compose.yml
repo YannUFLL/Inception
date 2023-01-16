@@ -50,8 +50,18 @@ services:
       - network
 
 volumes:
-  db_data: {}
-  app: {}
+  db_data: 
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ydumaine/data/db_data
+      o: bind
+  app: 
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ydumaine/data/app
+      o: bind
 
 networks:
   network:
