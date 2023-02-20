@@ -1,4 +1,5 @@
-#!/bin/sh 
+#!/bin/sh
+# We need to stop mariadb external connection for avoid external docker to start without mariadb propely configure.  
 sed -i 's/0.0.0.0/localhost/'  /etc/mysql/mariadb.conf.d/50-server.cnf
 # Strangely, work without root information but still throw a error message 
 service mysql start 2>/dev/null
@@ -18,12 +19,12 @@ if ! mariadb -u root -p$MARIADB_ROOT_PASSWORD -e "USE $MARIADB_DATABASE" >/dev/n
 fi;
 sleep 5
 mysqladmin -u root -p$MARIADB_ROOT_PASSWORD shutdown
-# We need to shutdown the server after the configuration because we are going to exec the server and no use it with a background process
+# We need to shutdown the server after the configuration because we are going to exec the server and no use it with a background process, the process must be pid obe
 while mysqladmin -u root -p$MARIADB_ROOT_PASSWORD ping 2>/dev/null
 do
 	sleep 2
 done
 # We need to be sure that the mysql server is well stopped, so we wait again a little bit
-sleep 2 
+sleep 2
 sed -i 's/localhost/0.0.0.0/' /etc/mysql/mariadb.conf.d/50-server.cnf
 exec mysqld
